@@ -4,7 +4,7 @@
 !define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
 !include FONTAWESOME/envelope.puml
 
-'LAYOUT_LEFT_RIGHT()
+LAYOUT_LEFT_RIGHT()
 
 title System Context diagram for Blogging System
 

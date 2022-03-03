@@ -1,0 +1,40 @@
+@startuml C4 Dynamic Diagram - Blog
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Dynamic.puml
+
+AddRelTag("event", $lineStyle = DashedLine())
+
+'LAYOUT_LEFT_RIGHT()
+
+title System Dynamic diagram for Blogging System
+
+Person(writer, "Writer", "A writer for posts, so readers can read them.")
+Person_Ext(reader, "Reader", "A reader for published posts by writers.")
+
+System_Boundary(bloggingSystem, "Blogging System"){
+  Container(webApp, "Web App", "Angular", "Web Application that allow users to create, update and read posts.", "angular")
+  'Container(mobileApp, "Mobile App", "AngularJS", "Mobile Application that allow users to read all published posts", "android")
+  Container(blogService, "Blog Service", "Spring Boot", "Service that expose an API Rest with operations related to Posts", "spring")
+  Container(blogConsumer, "Blog Consumer", "Spring Boot", "Service that consume events from Kafka and publish to E-mail System", "spring")
+  ContainerDb(blogDatabase, "Blog Database", "Postgres", "Database to store all post created", "postgresql")
+  ContainerQueue(blogBroker, "Blog Broker", "Kafka", "Distributed data store optimized for ingesting and processing streaming data in real-time.", "kafka")
+}
+
+System_Ext(mailSystem, "E-mail system", "The internal Microsoft Exchange e-mail system.")
+
+RelIndex_R($index, writer, webApp, "Write Post")
+increment()
+RelIndex_R($index, webApp, blogService, "Write Post", "https")
+increment()
+RelIndex_D($index, blogService, blogDatabase, "Writes to", "JDBC")
+increment()
+' Outbox Pattern From Database to Broker (Kafka Connect)
+RelIndex_L($index, blogDatabase, blogBroker, "Publish Post", "Kafka", $tags="event")
+increment()
+RelIndex($index, blogBroker, blogConsumer, "Consume Post", "Kafka", $tags="event")
+increment()
+RelIndex_L($index, blogConsumer, mailSystem, "Sends Notification", "https")
+increment()
+RelIndex_D($index, reader, mailSystem, "Sends Notification to", "SMTP")
+
+@enduml

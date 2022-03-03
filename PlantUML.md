@@ -145,7 +145,7 @@ Rel(spa, api, "Uses", "https")
 Rel_R(api, db, "Reads/Writes")
 Rel(admin, spaAdmin, "Uses", "https")
 Rel(spaAdmin, api, "Uses", "https")
-Rel_L(api, archive, "Writes", "messages", $tags="backup")
+Rel_L(api, archive, "Writes", "messages"c)
 
 SHOW_LEGEND()
 @enduml
