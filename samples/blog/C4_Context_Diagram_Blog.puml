@@ -1,0 +1,23 @@
+@startuml C4 Context Diagram - Blog
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+!define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
+!include FONTAWESOME/envelope.puml
+
+'LAYOUT_LEFT_RIGHT()
+
+title System Context diagram for Blogging System
+
+Person(writer, "Writer", "A writer for posts, so readers can read them.")
+Person_Ext(reader, "Reader", "A reader for published posts by writers.")
+
+System(bloggingSystem, "Blogging System", "Allows users to create, update and read posts, and subscribe to receive notifications via email.")
+System_Ext(mailSystem, "E-mail system", "The internal Microsoft Exchange e-mail system.", "envelope")
+
+Rel_Neighbor(writer, bloggingSystem, "Write Post", "https")
+Rel(writer, bloggingSystem, "Update Post", "https")
+Rel(reader, bloggingSystem, "Read Post", "https")
+Rel_Back(reader, mailSystem, "Sends Notification to", "SMTP")
+Rel_Neighbor(bloggingSystem, mailSystem, "Sends Notification", "https")
+
+@enduml

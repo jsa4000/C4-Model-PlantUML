@@ -1,0 +1,52 @@
+@startuml C4 Container Diagram - Blog
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+!define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+!define DEVICONS2 https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons2
+!define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
+
+!include DEVICONS/angular.puml
+!include DEVICONS2/android.puml
+!include DEVICONS2/spring.puml
+!include DEVICONS/postgresql.puml
+!include FONTAWESOME/server.puml
+!include FONTAWESOME/envelope.puml
+!include <logos/kafka>
+
+LAYOUT_LEFT_RIGHT()
+
+title System Container diagram for Blogging System
+
+Person(writer, "Writer", "A writer for posts, so readers can read them.")
+Person_Ext(reader, "Reader", "A reader for published posts by writers.")
+
+System_Boundary(bloggingSystem, "Blogging System"){
+  Container(webApp, "Web App", "Angular", "Web Application that allow users to create, update and read posts.", "angular")
+  Container(mobileApp, "Mobile App", "AngularJS", "Mobile Application that allow users to read all published posts", "android")
+  Container(blogService, "Blog Service", "Spring Boot", "Service that expose an API Rest with operations related to Posts", "spring")
+  Container(blogConsumer, "Blog Consumer", "Spring Boot", "Service that consume events from Kafka and publish to E-mail System", "spring")
+  ContainerDb(blogDatabase, "Blog Database", "Postgres", "Database to store all post created", "postgresql")
+  ContainerQueue(blogBroker, "Blog Broker", "Kafka", "Distributed data store optimized for ingesting and processing streaming data in real-time.", "kafka")
+}
+
+System_Ext(mailSystem, "E-mail system", "The internal Microsoft Exchange e-mail system.")
+
+Rel(writer, webApp, "Write Post")
+Rel(writer, webApp, "Update Post")
+Rel(reader, webApp, "Read Post")
+Rel(reader, mobileApp, "Read Post")
+
+Rel(webApp, blogService, "Write Post", "https")
+Rel(webApp, blogService, "Update Post", "https")
+Rel(webApp, blogService, "Read Post", "https")
+Rel(mobileApp, blogService, "Read Post", "https")
+
+Rel_Neighbor(blogService, blogDatabase, "Read from and writes to", "JDBC")
+Rel(blogDatabase, blogBroker, "Publish Post", "Kafka")
+Rel_Neighbor(blogBroker, blogConsumer, "Consume Post", "Kafka")
+
+Rel_Back(reader, mailSystem, "Sends Notification to", "SMTP")
+Rel_Neighbor(blogConsumer, mailSystem, "Sends Notification", "https")
+
+@enduml
