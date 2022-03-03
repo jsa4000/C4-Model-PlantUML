@@ -1,3 +1,10 @@
 # C4 Model Diagrams
 
 ## Core Diagrams
+
+### System Context Diagram
+
+Source: [C4_Context Diagram Sample - blog.puml](C4_Context%20Diagram%20Sample%20-%20blog.puml)
+
+![C4_Context Diagram Sample - blog](https://www.plantuml.com/plantuml/png/VL9DZzem5BpdLxnoAIi1kVJKq-xIg5q9jgY0gfuYntaa5euTsIy5_dsVyxNGfRt5ppFpPiPvz2GSDPMEFYWZTPCZb4Ir_np7JfmMXQAooHgFJbf3Q6WXRHNNMfZ0cNlAjShYvQVv9epswrLS2K_eU9Gk0-DCYpgeVuJ6CBLY2Q0IuM2rjYTb2j3A80YJmysrSfw_BF1gq5OAhI-iCNhyMpvQFVtwlj-bFrzstz9LyZLv_J9zY29If16s5xPKGK-0N8d2YOejE7ZXaJD8y2pCCRZfi56qGUUjcSh6awtGpM3IJOGUeSl-RiANJp0WmHxQ11cZPd3Y_g0Uc646GahR6FABoKFKRPjcdMBgsoFB_SDMkodqviTrFfJqM-49bE50bI1b3OZCDcsHojqkdRLDL-A8K8jBgBlrqHj9apDDAw7qcvDa7ixWn_qxpgPQUnnehQIptXu8ahCiXIaGy9hmbd6GDWUk7bbdFNpVoRWbwz03F_hGfkG1z3NTIJgsCRjAIauOBsI0yGb9jab_eBvwrNVDxprwXZ4gVHRoU0MzxMMB9lTzsF06FUSLLL5crhrxql-msyJhtQQJkCSSI-lTFJAT__e_ "C4_Context Diagram Sample - blog")
+
