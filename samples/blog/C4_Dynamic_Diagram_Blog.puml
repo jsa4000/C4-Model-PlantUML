@@ -4,7 +4,11 @@
 
 AddRelTag("event", $lineStyle = DashedLine())
 
+SHOW_PERSON_OUTLINE()
 'LAYOUT_LEFT_RIGHT()
+'LAYOUT_TOP_DOWN()
+'LAYOUT_AS_SKETCH()
+'LAYOUT_WITH_LEGEND()
 
 title System Dynamic diagram for Blogging System
 
@@ -17,24 +21,17 @@ System_Boundary(bloggingSystem, "Blogging System"){
   Container(blogMicro, "Blog MicroService", "Spring Boot", "MicroService that expose an API Rest with operations related to Posts", "spring")
   Container(notificationMicro, "Notification MicroService", "Spring Boot", "MicroService that consumes events from Kafka and publish to E-mail System", "spring")
   ContainerDb(blogDatabase, "Blog Database", "Postgres", "Database to store all post created", "postgresql")
-  ContainerQueue(blogBroker, "Blog Broker", "Kafka", "Distributed data store optimized for ingesting and processing streaming data in real-time.", "kafka")
+  ContainerQueue(messageBroker, "Message Broker", "Kafka", "Distributed data store optimized for ingesting and processing streaming data in real-time.", "kafka")
 }
 
 System_Ext(mailSystem, "E-mail system", "The internal Microsoft Exchange e-mail system.")
 
-RelIndex_R($index, writer, webApp, "Write Post")
-increment()
-RelIndex_R($index, webApp, blogMicro, "Write Post", "https")
-increment()
-RelIndex_D($index, blogMicro, blogDatabase, "Writes to", "JDBC")
-increment()
-' Outbox Pattern From Database to Broker (Kafka Connect)
-RelIndex_L($index, blogDatabase, blogBroker, "Publish Post", "Kafka", $tags="event")
-increment()
-RelIndex($index, blogBroker, notificationMicro, "Consume Post", "Kafka", $tags="event")
-increment()
-RelIndex_L($index, notificationMicro, mailSystem, "Sends Notification", "https")
-increment()
-RelIndex_D($index, reader, mailSystem, "Sends Notification to", "SMTP")
+RelIndex_R(Index(), writer, webApp, "Write Post")
+RelIndex_R(Index(), webApp, blogMicro, "Write Post", "https")
+RelIndex_D(Index(), blogMicro, blogDatabase, "Writes to", "JDBC")
+RelIndex_L(Index(), blogDatabase, messageBroker, "Publish Post", "Kafka", $tags="event", "Outbox Pattern with Kafka Connect")
+RelIndex(Index(), messageBroker, notificationMicro, "Consume Post", "Kafka", $tags="event")
+RelIndex_L(Index(), notificationMicro, mailSystem, "Sends Notification", "async,https")
+RelIndex_U(Index(), mailSystem, reader, "Sends Notification to", "SMTP")
 
 @enduml

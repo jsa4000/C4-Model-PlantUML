@@ -17,6 +17,9 @@
 AddRelTag("event", $lineStyle = DashedLine())
 
 LAYOUT_LEFT_RIGHT()
+'LAYOUT_TOP_DOWN()
+'LAYOUT_AS_SKETCH()
+'LAYOUT_WITH_LEGEND()
 
 title System Container diagram for Blogging System
 
@@ -29,7 +32,7 @@ System_Boundary(bloggingSystem, "Blogging System"){
   Container(blogMicro, "Blog MicroService", "Spring Boot", "MicroService that expose an API Rest with operations related to Posts", "spring")
   Container(notificationMicro, "Notification MicroService", "Spring Boot", "MicroService that consumes events from Kafka and publish to E-mail System", "spring")
   ContainerDb(blogDatabase, "Blog Database", "Postgres", "Database to store all post created", "postgresql")
-  ContainerQueue(blogBroker, "Blog Broker", "Kafka", "Distributed data store optimized for ingesting and processing streaming data in real-time.", "kafka")
+  ContainerQueue(messageBroker, "Message Broker", "Kafka", "Distributed data store optimized for ingesting and processing streaming data in real-time.", "kafka")
 
   Rel(webApp, blogMicro, "Write Post", "https")
   Rel(webApp, blogMicro, "Update Post", "https")
@@ -37,9 +40,8 @@ System_Boundary(bloggingSystem, "Blogging System"){
   Rel(mobileApp, blogMicro, "Read Post", "https")
   
   BiRel_Neighbor(blogMicro, blogDatabase, "Read from and writes to", "JDBC")
-  ' Outbox Pattern From Database to Broker (Kafka Connect)
-  Rel(blogDatabase, blogBroker, "Publish Post", "Kafka", $tags="event")
-  Rel_Neighbor(blogBroker, notificationMicro, "Consume Post", "Kafka", $tags="event")
+  Rel(blogDatabase, messageBroker, "Publish Post", "Kafka", $tags="event", "Outbox Pattern with Kafka Connect", $sprite="person2,scale=0.3")
+  Rel_Neighbor(messageBroker, notificationMicro, "Consume Post", "Kafka", $tags="event")
 }
 
 System_Ext(mailSystem, "E-mail system", "The internal Microsoft Exchange e-mail system.")
@@ -49,7 +51,7 @@ Rel(writer, webApp, "Update Post")
 Rel(reader, webApp, "Read Post")
 Rel(reader, mobileApp, "Read Post")
 
+Rel_Neighbor(notificationMicro, mailSystem, "Sends Notification", "async,https")
 Rel_Back(reader, mailSystem, "Sends Notification to", "SMTP")
-Rel_Neighbor(notificationMicro, mailSystem, "Sends Notification", "https")
 
 @enduml
