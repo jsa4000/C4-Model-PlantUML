@@ -1,0 +1,83 @@
+@startuml C4 Code Diagram - Blog
+
+title <b>Blog</b> Class Diagram
+
+'left to right direction
+skinparam shadowing false
+
+enum UserType {
+  WRITER
+  READER
+}
+
+abstract class Role {
+  String id
+  String name
+}
+
+abstract class User {
+  String id
+  String name
+  UserType type
+  List<Role> roles
+}
+note top: "Depending on the <b>UserType</b>,\n it can be wether <i>Writer</i> or <i>Reader</i>."
+User -- UserType
+
+User o-- "0..*" Role : has
+
+class Writer
+class Reader
+
+User <|-- Reader : type = <i>READER</i>
+User <|-- Writer : type = <i>WRITER</i>
+ 
+class Post {
+  String id
+  String title
+  String Author
+  String description
+  String text
+  String imagePaths
+}
+
+Writer "1" -- "0..*" Post : write
+Reader "0..*" -- "0..*" Post : read
+
+class PostDto {
+  String id
+  String title
+  String Author
+  String description
+  String text
+  String imagePaths
+}
+note bottom: PostDto (Data Transfer Object),\n is used in several layers to <b>simplify</b> mappings
+
+class PostController {
+    void create(PostDto post)
+    void update(PostDto post)
+    PostDto findById(String id)
+    List<PostDto> findAll()
+ }
+
+class PostService {
+    void save(PostDto post)
+    PostDto findById(String id)
+    List<PostDto> findAll()
+ }
+
+class PostRepository {
+    void save(Post post)
+    Post findById(String id)
+    List<Post> findAll()
+ }
+
+PostRepository -- Post
+PostController -- PostDto
+PostService -- PostDto
+
+PostService --> PostRepository : uses
+PostController --> PostService : uses
+
+@enduml
