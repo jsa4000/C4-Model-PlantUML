@@ -1,0 +1,41 @@
+@startuml C4 Component Diagram - Blog Container
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+!define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+!define DEVICONS2 https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons2
+!define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
+
+!include DEVICONS/angular.puml
+!include DEVICONS/postgresql.puml
+!include DEVICONS2/android.puml
+
+'LAYOUT_LEFT_RIGHT()
+'LAYOUT_TOP_DOWN()
+'LAYOUT_AS_SKETCH()
+'LAYOUT_WITH_LEGEND()
+
+title System Component diagram for Blog Container
+
+Container(webApp, "Web App", "Angular", "Web Application that allow users to create, update and read posts.", "angular")
+Container(mobileApp, "Mobile App", "AngularJS", "Mobile Application that allow users to read all published posts", "android")
+ContainerDb(blogDatabase, "Blog Database", "Postgres", "Database to store all post created", "postgresql")
+
+Container_Boundary(blogMicro, "Blog Microservice"){
+  Component(postController, "Post Controller", "Spring Web", "Controller that expose an API Rest with operations related to Posts")
+  Component(postService, "Post Service", "Spring", "Service that implements an interface with operations related to Posts")
+  Component(postRepository, "Post Repository", "Spring JPA", "JPA Repository with operations related to Posts")
+
+
+  Rel(postController, postService, "Uses")
+  Rel_L(postService, postRepository, "Uses")
+}
+
+Rel(webApp, postController, "Write Post", "https")
+Rel(webApp, postController, "Update Post", "https")
+Rel(webApp, postController, "Read Post", "https")
+Rel(mobileApp, postController, "Read Post", "https")
+
+Rel_U(postRepository, blogDatabase, "Read from and writes to", "JDBC")
+
+@enduml

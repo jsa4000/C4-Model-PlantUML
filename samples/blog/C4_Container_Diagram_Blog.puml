@@ -39,7 +39,7 @@ System_Boundary(bloggingSystem, "Blogging System"){
   Rel(webApp, blogMicro, "Read Post", "https")
   Rel(mobileApp, blogMicro, "Read Post", "https")
   
-  BiRel_Neighbor(blogMicro, blogDatabase, "Read from and writes to", "JDBC")
+  Rel_Neighbor(blogMicro, blogDatabase, "Read from and writes to", "JDBC")
   Rel(blogDatabase, messageBroker, "Publish Post", "Kafka", $tags="event", "Outbox Pattern with Kafka Connect", $sprite="person2,scale=0.3")
   Rel_Neighbor(messageBroker, notificationMicro, "Consume Post", "Kafka", $tags="event")
 }
