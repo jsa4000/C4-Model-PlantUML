@@ -6,11 +6,11 @@ participant "Sign.java" as controler <<(C,#ADD1B2) Contrôleur formulaire>>
 participant "Secure.java" as secure <<(C,#ADD1B2) authentification>>
 participant "Security.java" as security <<(C,#ADD1B2) sécurité>>
 
-box "Application Web" #LightBlue
+box "Email System" #LightBlue
 	participant form
 end box
 
-box "Serveur Play" #LightGreen
+box "Blogging System" #LightGreen
 	participant controler
 	participant secure
 	participant security
