@@ -78,4 +78,8 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# Structurizr Folder
+.structurizr
+workspace.json
+
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,macos,windows
